@@ -1,0 +1,7 @@
+# E2E 测试生成的文件
+
+# 测试截图（可选：如果想提交截图作为文档，可以注释掉这行）
+screenshots/
+
+# Playwright 测试结果
+test-results/

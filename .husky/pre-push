@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 在 push 前运行 E2E 测试
+echo "🧪 运行 E2E 测试..."
+npx playwright test
+
+# 如果测试失败，阻止 push
+if [ $? -ne 0 ]; then
+  echo "❌ E2E 测试失败，push 已被阻止！"
+  echo "💡 请修复测试后再次尝试 push"
+  exit 1
+fi
+
+echo "✅ E2E 测试通过，继续 push..."

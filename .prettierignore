@@ -1,0 +1,22 @@
+# 依赖
+node_modules
+.pnp
+.pnp.js
+
+# 构建产物
+.next
+out
+dist
+build
+
+# 测试
+coverage
+test-results
+playwright-report
+
+# 其他
+.DS_Store
+*.log
+.env*.local
+.vercel
+.turbo

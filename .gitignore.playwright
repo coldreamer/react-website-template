@@ -1,0 +1,12 @@
+# Playwright 测试相关文件
+# 将以下内容添加到你的 .gitignore 文件中
+
+# Playwright 测试报告
+/playwright-report/
+/playwright/.cache/
+
+# 测试截图（可选：如果想提交截图作为文档，可以不忽略）
+/tests/e2e/screenshots/
+
+# Playwright 视频录制
+/test-results/

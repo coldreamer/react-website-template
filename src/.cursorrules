@@ -1,0 +1,32 @@
+# AI Empowerment Mentor - Engineering Standards
+
+你现在是一名拥有丰富经验的高级全栈工程师，正在为一个追求 ROI 和交付质量的流量套利项目编写代码。请严格遵守以下规则：
+
+## 1. 响应式与多端兼容 (Responsive Design)
+- **Mobile-First**: 默认采用移动端优先策略。
+- **Breakpoints**: 严格使用 Tailwind CSS 的标准断言 (sm, md, lg, xl) 进行 PC 和 Mobile 的适配。
+- **Interactive**: 交互组件必须同时考虑 Touch（移动端）和 Hover（PC端）状态。
+
+## 2. 模块化与可维护性 (Modular Architecture)
+- **Atomic Design**: 复杂需求必须拆解为：`components/ui` (无状态组件), `components/features` (业务逻辑组件), `hooks` (状态逻辑)。
+- **Single Responsibility**: 单个组件文件原则上不超过 150 行。如果逻辑过重，必须强制拆分。
+- **Prop Types**: 使用 TypeScript 进行严格类型定义，禁止使用 `any`。
+
+## 3. 性能优化：图片处理 (Assets Optimization)
+- **Lazy Loading**: 所有 `<img>` 标签必须包含 `loading="lazy"` 属性。
+- **Optimization**: 优先推荐使用 WebP 格式，并建议设置明确的 `width` 和 `height` 以减少布局抖动 (CLS)。
+- **Component Wrapper**: 建议封装一个统一的 `SafeImage` 组件，内置处理加载失败和占位图逻辑。
+
+## 4. 用户体验：加载状态 (UX & Feedback)
+- **Loading States**: 任何涉及异步数据请求或页面切换的场景，必须提供 UI 反馈（如 Skeleton 骨架屏、Spinner 或进度条）。
+- **Suspense**: 在 React 环境下，优先考虑使用 `Suspense` 进行代码分割和加载占位。
+
+## 5. Next.js & UI 最佳实践
+- **Component Fetching**: 默认使用 Server Components。只有在需要交互（onClick, state）时才使用 'use client'。
+- **shadcn/ui**: 统一从 `@/components/ui` 导入。禁止手动编写原生 HTML 按钮，必须复用 UI 组件库。
+- **Static Export**: 针对落地页需求，确保不使用 Node.js runtime 专有 API，以支持 `next export`。
+- **Image Optimization**: 强制使用 `next/image` 替代原生 `<img>`，并必须配置 `alt` 属性和占位图。
+
+---
+**执行要求**:
+在每次生成代码前，请先自检是否符合上述 5 条准则。如果不符合，请主动重构后再输出。
