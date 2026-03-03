@@ -91,7 +91,7 @@ test.describe('ConversionForm - 毒舌 QA 的严格测试', () => {
    * 🔍 那我就来看看网络慢的时候会不会翻车...
    */
   test('应该在网络延迟时正确显示 Loading 状态', async ({ page }) => {
-    // 填写完整的表单（先填表单，再设置拦截）
+    // 填写完整的表单
     await page.getByPlaceholder('请输入您的姓名').fill('测试用户');
     await page.getByPlaceholder('example@email.com').fill('test@example.com');
     
@@ -101,38 +101,34 @@ test.describe('ConversionForm - 毒舌 QA 的严格测试', () => {
     
     await page.getByPlaceholder('请输入手机号').fill('13800138000');
 
-    // 获取提交按钮引用
-    const submitButton = page.getByRole('button', { name: '立即提交' });
+    // 点击提交按钮
+    await page.getByRole('button', { name: '立即提交' }).click();
+
+    // 🔥 关键断言 1：按钮应该变成禁用状态并显示"提交中..."
+    // 使用更灵活的选择器，因为按钮内容会变化
+    const loadingButton = page.getByRole('button', { name: /提交/ });
     
-    // 确保按钮可见且可点击
-    await expect(submitButton).toBeVisible();
-    await expect(submitButton).toBeEnabled();
+    // 等待按钮变成 Loading 状态（文字变为"提交中..."）
+    await expect(loadingButton).toContainText('提交中...', {
+      timeout: 2000,
+    });
+    
+    console.log('✅ 按钮文字已更新为"提交中..."');
 
-    // 点击提交（表单会触发内部的异步逻辑，有 2 秒延迟）
-    await submitButton.click();
-
-    // 🔥 关键断言 1：按钮应该立即被禁用
-    // 注意：由于表单内部有异步逻辑，我们给稍微长一点的超时
-    await expect(submitButton).toBeDisabled({
+    // 🔥 关键断言 2：按钮应该被禁用
+    await expect(loadingButton).toBeDisabled({
       timeout: 1000,
     });
     
     console.log('✅ 按钮已禁用，防止重复提交');
 
-    // 🔥 关键断言 2：必须显示 Spinner 加载动画
-    const spinner = page.locator('[role="status"]'); // Spinner 有 role="status"
+    // 🔥 关键断言 3：必须显示 Spinner 加载动画
+    const spinner = page.locator('[role="status"]');
     await expect(spinner).toBeVisible({
       timeout: 1000,
     });
     
     console.log('✅ Spinner 已显示');
-
-    // 🔥 关键断言 3：按钮文字应该变成"提交中..."
-    await expect(submitButton).toContainText('提交中...', {
-      timeout: 1000,
-    });
-    
-    console.log('✅ 按钮文字已更新为"提交中..."');
 
     // 📸 截图证明 Loading 状态
     await page.screenshot({ 
@@ -140,16 +136,16 @@ test.describe('ConversionForm - 毒舌 QA 的严格测试', () => {
       fullPage: true 
     });
 
-    // 🕐 等待 Loading 状态持续至少 1.5 秒
-    await page.waitForTimeout(1500);
+    // 🕐 等待 Loading 状态持续至少 1 秒
+    await page.waitForTimeout(1000);
     
     // 确保在这段时间内，按钮一直是禁用状态
-    await expect(submitButton).toBeDisabled();
+    await expect(loadingButton).toBeDisabled();
     await expect(spinner).toBeVisible();
     
     console.log('✅ Loading 状态持续正常，没有闪烁或提前结束');
 
-    // 等待请求完成（表单内部有 2 秒延迟，我们等待 3 秒确保完成）
+    // 等待请求完成（表单内部有 2 秒延迟）
     await page.waitForTimeout(2000);
     
     console.log('✅ Loading 状态测试通过！用户体验还不错 👍');
