@@ -46,3 +46,5 @@ test-results/
 
 tests/e2e/screenshots/
 test-results/
+prompt.txt
+playwright-report/
